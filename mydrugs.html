@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MYDRUGS</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #2c2c2c; /* Darker background for better contrast */
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #4caf50;
+      margin-top: 20px;
+      font-size: 3rem;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    }
+
+    #money-counter {
+      font-size: 2rem;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    #click-button {
+      padding: 20px 40px;
+      font-size: 1.5rem;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #click-button:hover {
+      transform: scale(1.1);
+      background-color: #45a049; /* Slightly darker green on hover */
+    }
+
+    #upgrades {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .upgrade {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #357ab8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .upgrade:hover {
+      background-color: #285a8e;
+      transform: scale(1.05);
+    }
+
+    .upgrade:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #ff69b4;
+    }
+
+    .achievement {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      color: #ffcc00;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      #click-button {
+        width: 90%;
+      }
+
+      .upgrade {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>MYDRUGS</h1>
+  <p id="money-counter">Money: $0</p>
+  <button id="click-button">Sell Weed 🌿</button>
+  <div id="upgrades">
+    <button class="upgrade" id="sell-lsd" disabled>Sell LSD (Unlock for $100)</button>
+    <button class="upgrade" id="sell-mdma" disabled>Sell MDMA (Unlock for $500)</button>
+    <button class="upgrade" id="hire-dealers" disabled>Hire Dealers (Unlock for $1000)</button>
+    <button class="upgrade" id="expand-business" disabled>Expand Business (Unlock for $5000)</button>
+  </div>
+  <p id="message"></p>
+  <audio id="click-sound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+  <audio id="upgrade-sound" src="https://www.soundjay.com/button/beep-10.wav"></audio>
+
+  <script>
+    let money = 0;
+    let weedIncome = 1;
+    let lsdUnlocked = false;
+    let mdmaUnlocked = false;
+    let dealersUnlocked = false;
+    let dealerIncome = 0;
+    let level = 1;
+
+    const moneyCounter = document.getElementById('money-counter');
+    const clickButton = document.getElementById('click-button');
+    const sellLSDButton = document.getElementById('sell-lsd');
+    const sellMDMAButton = document.getElementById('sell-mdma');
+    const hireDealersButton = document.getElementById('hire-dealers');
+    const expandBusinessButton = document.getElementById('expand-business');
+    const message = document.getElementById('message');
+    const clickSound = document.getElementById('click-sound');
+    const upgradeSound = document.getElementById('upgrade-sound');
+
+    // Function to update the money counter and button states
+    function updateGame() {
+      moneyCounter.textContent = `Money: $${money}`;
+      sellLSDButton.disabled = money < 100 || lsdUnlocked;
+      sellMDMAButton.disabled = money < 500 || mdmaUnlocked;
+      hireDealersButton.disabled = money < 1000 || dealersUnlocked;
+      expandBusinessButton.disabled = money < 5000;
+    }
+
+    // Click button to sell weed
+    clickButton.addEventListener('click', () => {
+      money += weedIncome;
+      clickSound.play();
+      updateGame();
+    });
+
+    // Unlock LSD sales
+    sellLSDButton.addEventListener('click', () => {
+      if (money >= 100 && !lsdUnlocked) {
+        money -= 100;
+        lsdUnlocked = true;
+        weedIncome += 5; // Increase income per click
+        upgradeSound.play();
+        message.textContent = 'You unlocked LSD sales! 💊';
+        setTimeout(() => (message.textContent = ''), 3000);
+        updateGame();
+      }
+    });
+
+    // Unlock MDMA sales
+    sellMDMAButton.addEventListener('click', () => {
+      if (money >= 500 && !mdmaUnlocked) {
+        money -= 500;
+        mdmaUnlocked = true;
+        weedIncome += 10; // Increase income per click
+        upgradeSound.play();
+        message.textContent = 'You unlocked MDMA sales! 🎉';
+        setTimeout(() => (message.textContent = ''), 3000);
+        updateGame();
+      }
+    });
+
+    // Hire dealers for automation
+    hireDealersButton.addEventListener('click', () => {
+      if (money >= 1000 && !dealersUnlocked) {
+        money -= 1000;
+        dealersUnlocked = true;
+        dealerIncome = 5; // Dealers generate $5 per second
+        upgradeSound.play();
+        message.textContent = 'You hired dealers to automate sales! 🕴️';
+        setTimeout(() => (message.textContent = ''), 3000);
+        updateGame();
+      }
+    });
+
+    // Expand business
+    expandBusinessButton.addEventListener('click', () => {
+      if (money >= 5000) {
+        money -= 5000;
+        weedIncome += 20; // Increase income per click significantly
+        level += 1; // Increase level
+        upgradeSound.play();
+        message.textContent = `You expanded your business empire to Level ${level}! 🏢`;
+        setTimeout(() => (message.textContent = ''), 3000);
+        updateGame();
+      }
+    });
+
+    // Automation: Generate money over time
+    setInterval(() => {
+      if (dealersUnlocked) {
+        money += dealerIncome;
+        updateGame();
+      }
+    }, 1000); // Generate money every second
+
+    // Initial game update
+    updateGame();
+  </script>
+</body>
+<a href="index.html" class="heart-button">&#10084; Return to Home &#10084;</a>
+
+<style>
+  .heart-button {
+    display: inline-block;
+    background-color: #FF1493;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 25px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .heart-button:hover {
+    transform: scale(1.1);
+  }
+
+  .heart-button:before {
+    content: "\2764";
+    font-size: 22px;
+    margin-right: 5px;
+  }
+</style>
+</html>
