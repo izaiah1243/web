@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy 5 Months!</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      flex-direction: column;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3rem;
+      z-index: 10;
+      animation: popIn 1s ease forwards;
+      opacity: 0;
+      margin-bottom: 1rem;
+    }
+
+    .note {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.2rem 2rem;
+      border-radius: 12px;
+      max-width: 500px;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInSlide 1.5s ease 1s forwards;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .heart {
+      position: absolute;
+      bottom: 20px;
+      font-size: 2rem;
+      animation: pulse 2s infinite;
+      z-index: 10;
+    }
+
+    @keyframes popIn {
+      to {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+    }
+
+    @keyframes fadeInSlide {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: hsl(var(--hue), 100%, 60%);
+      animation: explode 1s ease-out forwards;
+    }
+
+    @keyframes explode {
+      to {
+        transform: translate(var(--x), var(--y)) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .floating-heart {
+      position: absolute;
+      color: pink;
+      font-size: 1.2rem;
+      animation: floatUp 4s ease-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-150px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>❤️ Happy 5 Months ❤️</h1>
+  <div class="note">
+   THANK YOU FOR THE BEST 5 MONTHS 
+   My love every moment with you has been perfect. Thank you so so so so much. You have made me experience happiness and true love. You are genuinely the love of my life. I love you so so so so much, my beautiful wife. You are so perfect in every way. You are so beautiful. I don’t know how you’re with me, but I am forever grateful for you and everything you do for me. The videos you made for me are actually the nicest thing ever I was so overwhelmed with love the moment you showed me them. I was actually dying from how much love I felt, so thank you. I am yours forever, my love. I’m never going to lose you, and you’ll never lose me. I love you so so so so soooo much more. Thank you for everything. Happy 5 months. I love you most. ❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️
+  </div>
+  <div class="heart">💗</div>
+
+  <script>
+    function createExplosion(x, y) {
+      const numParticles = 100;
+      for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const hue = Math.floor(Math.random() * 360);
+        particle.style.setProperty('--hue', hue);
+        const angle = Math.random() * 2 * Math.PI;
+        const radius = Math.random() * 150;
+        const dx = Math.cos(angle) * radius + 'px';
+        const dy = Math.sin(angle) * radius + 'px';
+        particle.style.setProperty('--x', dx);
+        particle.style.setProperty('--y', dy);
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        document.body.appendChild(particle);
+
+        setTimeout(() => particle.remove(), 1000);
+      }
+    }
+
+    function spawnFloatingHearts() {
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('floating-heart');
+        heart.textContent = '❤️';
+        heart.style.left = Math.random() * window.innerWidth + 'px';
+        heart.style.top = window.innerHeight + 'px';
+        heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 4000);
+      }, 500);
+    }
+
+    window.addEventListener('load', () => {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      createExplosion(centerX, centerY);
+      spawnFloatingHearts();
+    });
+  </script>
+</body>
+
+<!-- Return to Home Heart Button -->
+<a href="index.html" class="heart-button">&#10084; Return to Home &#10084;</a>
+
+<style>
+  .heart-button {
+    display: inline-block;
+    background-color: #FF1493;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 25px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .heart-button:hover {
+    transform: scale(1.1);
+  }
+
+  .heart-button:before {
+    content: "\2764";
+    font-size: 22px;
+    margin-right: 5px;
+  }
+</html>
+
