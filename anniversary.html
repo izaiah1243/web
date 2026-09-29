@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1 Year &amp; 10 Months ❤️</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--pink:#ff69b4;--hot:#ff1493}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 10%,rgba(255,105,180,.18),transparent 30%),radial-gradient(circle at 80% 90%,rgba(255,20,147,.14),transparent 35%),#0b0b0f;color:#fff;font-family:Arial,Helvetica,sans-serif;display:flex;justify-content:center}
+.page{width:min(900px,92vw);padding:70px 0 55px;text-align:center}
+.eyebrow{color:var(--pink);text-transform:uppercase;letter-spacing:4px;font-size:.78rem;font-weight:700;margin-bottom:12px}
+h1{margin:.1rem 0 .4rem;font-size:clamp(2.3rem,7vw,5rem);line-height:1;text-shadow:0 0 25px rgba(255,20,147,.45)}
+.heart{display:inline-block;color:var(--pink);animation:beat 1.5s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.subtitle{color:#f6b7d7;font-size:1.1rem;margin:0 0 35px}
+.card{position:relative;text-align:left;margin:0 auto;width:min(760px,100%);background:rgba(255,255,255,.055);border:1px solid rgba(255,105,180,.35);border-radius:26px;padding:clamp(24px,5vw,52px);box-shadow:0 0 45px rgba(255,20,147,.13);backdrop-filter:blur(10px)}
+.card:before{content:"♥";position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--hot);box-shadow:0 0 25px rgba(255,20,147,.6)}
+.note{white-space:pre-wrap;font-size:clamp(1.05rem,2vw,1.25rem);line-height:1.9;color:#fff}
+.footer{margin-top:34px;color:#ff9dca;font-size:1.2rem}
+.home{display:inline-block;margin-top:25px;padding:12px 22px;border-radius:12px;background:var(--hot);color:#fff;text-decoration:none;font-weight:700;transition:.2s}
+.home:hover{transform:translateY(-2px);background:var(--pink)}
+.floating-heart{position:fixed;color:rgba(255,105,180,.25);font-size:2rem;animation:float 7s linear infinite;pointer-events:none}
+.f1{left:8%;bottom:-30px}.f2{left:88%;bottom:-30px;animation-delay:2s}.f3{left:50%;bottom:-30px;animation-delay:4s}
+@keyframes float{from{transform:translateY(0) rotate(0deg);opacity:0}15%{opacity:1}to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+
+/* Dramatic anniversary page opening */
+.page{
+  animation:pageOpen .95s cubic-bezier(.16,1,.3,1) both;
+}
+.card{
+  transform-origin:center center;
+  animation:cardExplode 1.25s cubic-bezier(.16,1,.3,1) .12s both;
+}
+.eyebrow,.subtitle,.footer,.home{
+  animation:fadeUp .8s ease-out .55s both;
+}
+@keyframes pageOpen{
+  0%{opacity:0;transform:scale(.72) rotate(-2deg)}
+  45%{opacity:1;transform:scale(1.035) rotate(1deg)}
+  72%{transform:scale(.985) rotate(-.35deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes cardExplode{
+  0%{opacity:0;transform:scale(.18) rotate(-7deg);filter:blur(12px);box-shadow:0 0 0 rgba(255,20,147,0)}
+  35%{opacity:1;transform:scale(1.08) rotate(2deg);filter:blur(0);box-shadow:0 0 100px rgba(255,20,147,.75)}
+  58%{transform:scale(.96) rotate(-1deg);box-shadow:0 0 55px rgba(255,20,147,.35)}
+  78%{transform:scale(1.025) rotate(.3deg)}
+  100%{opacity:1;transform:scale(1) rotate(0);box-shadow:0 0 45px rgba(255,20,147,.13)}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(22px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media (prefers-reduced-motion:reduce){
+  .page,.card,.eyebrow,.subtitle,.footer,.home{animation:none!important}
+}
+
+
+.burst{position:fixed;inset:50% auto auto 50%;width:1px;height:1px;pointer-events:none;z-index:20}
+.burst i{
+  position:absolute;width:10px;height:10px;border-radius:50%;
+  background:#ff69b4;box-shadow:0 0 16px #ff1493;
+  opacity:0;animation:burstOut 1.15s cubic-bezier(.15,.75,.25,1) .08s both;
+}
+.burst i:nth-child(1){--x:-180px;--y:-110px}
+.burst i:nth-child(2){--x:175px;--y:-125px}
+.burst i:nth-child(3){--x:-220px;--y:15px}
+.burst i:nth-child(4){--x:215px;--y:30px}
+.burst i:nth-child(5){--x:-145px;--y:145px}
+.burst i:nth-child(6){--x:150px;--y:150px}
+.burst i:nth-child(7){--x:-55px;--y:-185px}
+.burst i:nth-child(8){--x:60px;--y:190px}
+@keyframes burstOut{
+  0%{opacity:0;transform:translate(0,0) scale(.2)}
+  12%{opacity:1}
+  72%{opacity:.9}
+  100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.4)}
+}
+
+</style>
+</head>
+<body>
+
+<div class="burst" aria-hidden="true">
+  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</div>
+
+<div class="floating-heart f1">♥</div><div class="floating-heart f2">♥</div><div class="floating-heart f3">♥</div>
+<main class="page">
+<h1>1 Year &amp; 10 Months <span class="heart">❤️</span></h1>
+<p class="subtitle">I LOVE YOU</p>
+<section class="card"><div class="note">My love HAPPY ANNIVERSARY I LOVE YOU SO SO SO  MUCHHHH THANK YOU FOR MAKING EVERY MOMENT OF MY LIFE THE BEST AND HAPPIEST IT EVER HAS BEEN i am so proud of us look at us go almost 2 years and we still have never had a big fight or even gone a full day without talking that makes me happier than you know and I can see how happy i make you i need you to know my feelings towards you have only gotten stronger over all this time I still get butterflies every time we kiss and i will forever hold onto that feeling, i ALSO need you to know you are so fucking beautiful every day you become more and more beautiful and i still wouldn't change a single thing about you :)) My love for you is still growing every single day i am so exited for the future as we are about to take a massive step and move in together i cant wait to keep sharing all the big moments in my life with you Tara i truly love you so much more than you know and forever i love you most.</div></section>
+<div class="footer">I love you most. Always. ❤️</div>
+<a class="home" href="index.html">Return to Home</a>
+</main>
+</body>
+</html>

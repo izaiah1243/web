@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Izaiah's Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15101f;--card:#221a33;--rose:#ff5d8f;--apricot:#ffb677;--lilac:#b9a6ff;--paper:#fff4ee}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--ink);color:var(--paper);font-family:'DM Sans',system-ui,sans-serif;text-align:center;padding:1rem 1rem 6rem}
+h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(1.8rem,6vw,2.8rem);margin:.3rem 0 .8rem}
+.stats{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.8rem}
+.stat{background:var(--card);border-radius:12px;padding:.5rem 1rem;min-width:5.5rem}
+.stat b{display:block;font-size:1.35rem;color:var(--apricot);font-weight:500}.stat span{font-size:.85rem;color:#c9bfe0}
+#arena{position:relative;max-width:46rem;height:min(58vh,30rem);margin:0 auto;border-radius:18px;overflow:hidden;background:radial-gradient(circle at 50% 100%,#3a2456,#1b1428);border:1px solid rgba(185,166,255,.3);touch-action:manipulation}
+.foe{position:absolute;width:56px;height:56px;border:0;background:none;font-size:2.6rem;line-height:1;cursor:crosshair;animation:shrink var(--life) linear forwards}
+@keyframes shrink{from{transform:scale(1)}to{transform:scale(.35);opacity:.4}}
+.pop{position:absolute;color:var(--apricot);font-weight:500;pointer-events:none;animation:up .7s ease-out forwards}
+@keyframes up{to{transform:translateY(-50px);opacity:0}}
+.hint{position:absolute;inset:auto 0 .8rem;color:#c9bfe0;font-size:.95rem;pointer-events:none}
+.shop{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin:1rem 0}
+.shop button{padding:.8rem 1.3rem;font:inherit;border-radius:99px;border:0;background:var(--rose);color:#fff;cursor:pointer;transition:transform .15s}
+.shop button:hover:not(:disabled){transform:translateY(-2px)}
+.shop button:disabled{background:#3a3050;color:#8d82a6;cursor:not-allowed}
+#msg{min-height:2rem;font-size:1.2rem;color:var(--rose)}
+.home{position:fixed;left:50%;bottom:1.1rem;transform:translateX(-50%);background:var(--rose);color:#fff;padding:.65rem 1.3rem;border-radius:99px;text-decoration:none;font-weight:500;box-shadow:0 8px 24px rgba(255,93,143,.4);white-space:nowrap}
+:focus-visible{outline:3px solid var(--apricot);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.foe,.pop{animation-duration:.01s!important}}
+</style>
+</head>
+<body>
+<h1>Izaiah's Quest</h1>
+<div class="stats">
+  <div class="stat"><b id="money">$0</b><span>Money</span></div>
+  <div class="stat"><b id="flowers">0</b><span>Flowers</span></div>
+  <div class="stat"><b id="combo">x1</b><span>Combo</span></div>
+  <div class="stat"><b id="hearts">0</b><span>Tara's hearts</span></div>
+</div>
+<div id="arena"><div class="hint" id="hint">Pop the monsters before they fade. Each pop earns $5, and streaks earn more.</div></div>
+<div class="shop">
+  <button id="buy" disabled>Buy a flower ($10)</button>
+  <button id="give" disabled>Give a flower to Tara</button>
+</div>
+<div id="msg" role="status"></div>
+<a class="home" href="index.html">❤ Return to Home</a>
+<script>
+const arena=document.getElementById('arena'),$=id=>document.getElementById(id);
+const foes=['👹','👾','🐍','🦂','👻'],notes=['She smiled the whole way home. ❤️','Tara: "you got me flowers?!" 🥹','Best knight in the kingdom. 🌹',"She's putting them on the shelf forever. 💐"];
+let money=0,flowers=0,combo=1,hearts=0,spawnEvery=1100,timer;
+function draw(){$('money').textContent='$'+money;$('flowers').textContent=flowers;$('combo').textContent='x'+combo;$('hearts').textContent=hearts;
+ $('buy').disabled=money<10;$('give').disabled=!flowers}
+function say(t){$('msg').textContent=t;clearTimeout(say.t);say.t=setTimeout(()=>$('msg').textContent='',3500)}
+function spawn(){
+ $('hint').remove&&$('hint').isConnected&&$('hint').remove();
+ const e=document.createElement('button'),life=Math.max(1.4,3-money/400);
+ e.className='foe';e.setAttribute('aria-label','Monster');e.textContent=foes[Math.random()*foes.length|0];
+ e.style.setProperty('--life',life+'s');
+ e.style.left=Math.random()*(arena.clientWidth-60)+'px';e.style.top=Math.random()*(arena.clientHeight-60)+'px';
+ e.onpointerdown=ev=>{ev.preventDefault();const g=5*combo;money+=g;combo=Math.min(combo+1,10);
+  const p=document.createElement('span');p.className='pop';p.textContent='+$'+g;p.style.left=e.style.left;p.style.top=e.style.top;arena.append(p);setTimeout(()=>p.remove(),700);
+  e.remove();draw()};
+ e.addEventListener('animationend',()=>{if(e.isConnected){e.remove();if(combo>1){combo=1;draw()}}});
+ arena.append(e)}
+function run(){clearInterval(timer);spawnEvery=Math.max(500,1100-money*1.5);timer=setInterval(()=>{spawn();if(spawnEvery>500&&Math.random()<.1)run()},spawnEvery)}
+$('buy').onclick=()=>{if(money>=10){money-=10;flowers++;draw()}};
+$('give').onclick=()=>{if(flowers){flowers--;hearts++;say(notes[Math.random()*notes.length|0]);draw()}};
+document.addEventListener('visibilitychange',()=>document.hidden?clearInterval(timer):run());
+run();draw();
+</script>
+</body>
+</html>

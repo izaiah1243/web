@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MYDRUGS</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#101a14;--card:#182920;--g:#4fd08a;--gold:#ffcf5a;--paper:#eef8f1}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#1f3a2b,var(--ink) 65%) fixed;color:var(--paper);font-family:'DM Sans',system-ui,sans-serif;text-align:center;padding:1.2rem 1rem 6rem}
+h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(2.4rem,9vw,4rem);margin:.2rem 0;color:var(--g);letter-spacing:.02em}
+.lvl{color:var(--gold);min-height:1.4em}
+#money{font-family:'Fraunces',Georgia,serif;font-size:clamp(2.4rem,10vw,4rem);margin:.5rem 0 0}
+.rates{color:#a9c9b7;margin:.2rem 0 1.4rem}
+#sell{position:relative;padding:1.2rem 2.6rem;font:inherit;font-size:1.4rem;background:var(--g);color:#08170f;border:0;border-radius:16px;cursor:pointer;box-shadow:0 8px 0 #2c8a57,0 16px 30px rgba(0,0,0,.4);transition:transform .07s,box-shadow .07s;user-select:none}
+#sell:active{transform:translateY(6px);box-shadow:0 2px 0 #2c8a57}
+.float{position:fixed;pointer-events:none;color:var(--gold);font-weight:500;animation:up .8s ease-out forwards}
+@keyframes up{to{transform:translateY(-60px);opacity:0}}
+.ups{display:grid;gap:.6rem;max-width:32rem;margin:2rem auto 0}
+.up{display:flex;justify-content:space-between;gap:1rem;align-items:center;text-align:left;background:var(--card);color:var(--paper);border:1px solid rgba(79,208,138,.25);border-radius:14px;padding:.85rem 1.1rem;font:inherit;cursor:pointer;transition:border-color .2s,transform .15s}
+.up:hover:not(:disabled){border-color:var(--g);transform:translateY(-2px)}
+.up:disabled{opacity:.45;cursor:not-allowed}
+.up b{display:block;font-weight:500}.up small{color:#a9c9b7}.cost{color:var(--gold);white-space:nowrap}
+#msg{min-height:2rem;margin-top:1rem;color:var(--gold);font-size:1.1rem}
+.tools{margin-top:1.4rem;display:flex;gap:.6rem;justify-content:center}
+.tools button{background:none;border:1px solid #3b5a48;color:#a9c9b7;border-radius:99px;padding:.4rem .9rem;font:inherit;cursor:pointer}
+.home{position:fixed;left:50%;bottom:1.1rem;transform:translateX(-50%);background:#ff5d8f;color:#fff;padding:.65rem 1.3rem;border-radius:99px;text-decoration:none;font-weight:500;box-shadow:0 8px 24px rgba(255,93,143,.4);white-space:nowrap}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<h1>MYDRUGS</h1>
+<div class="lvl" id="lvl"></div>
+<div id="money">$0</div>
+<div class="rates" id="rates"></div>
+<button id="sell">Sell weed 🌿</button>
+<div class="ups" id="ups"></div>
+<p id="msg" role="status"></p>
+<div class="tools"><button id="mute">Sound: on</button><button id="reset">Reset game</button></div>
+<a class="home" href="index.html">❤ Return to Home</a>
+<script>
+const KEY='mydrugs-save-v2',$=id=>document.getElementById(id);
+let S={money:0,click:1,auto:0,level:1,own:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+let sound=true,ac;
+function beep(f,d=.08){if(!sound)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.type='triangle';g.gain.value=.06;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+const U=[
+ {id:'lsd',n:'Sell LSD 💊',d:'+5 per click',base:100,g:1,max:1,fx:()=>S.click+=5,m:'You unlocked LSD sales! 💊'},
+ {id:'mdma',n:'Sell MDMA 🎉',d:'+10 per click',base:500,g:1,max:1,fx:()=>S.click+=10,m:'You unlocked MDMA sales! 🎉'},
+ {id:'dealers',n:'Hire a dealer 🕴️',d:'+$5 per second',base:1000,g:1.35,fx:()=>S.auto+=5,m:'A new dealer joined the crew. 🕴️'},
+ {id:'expand',n:'Expand the business 🏢',d:'+20 per click, +1 level',base:5000,g:1.6,fx:()=>{S.click+=20;S.level++},m:'Your empire hit level '+'#! 🏢'}
+];
+const own=id=>S.own[id]||0,cost=u=>Math.ceil(u.base*Math.pow(u.g,own(u.id)));
+const fmt=n=>n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':Math.floor(n).toLocaleString();
+U.forEach(u=>{const b=document.createElement('button');b.className='up';b.id='u-'+u.id;
+ b.onclick=()=>{if(S.money<cost(u)||(u.max&&own(u.id)>=u.max))return;S.money-=cost(u);S.own[u.id]=own(u.id)+1;u.fx();beep(660,.15);say(u.m.replace('#',S.level));draw()};$('ups').append(b)});
+function draw(){
+ $('money').textContent='$'+fmt(S.money);$('lvl').textContent='Level '+S.level;
+ $('rates').textContent='$'+fmt(S.click)+' per click · $'+fmt(S.auto)+' per second';
+ U.forEach(u=>{const b=$('u-'+u.id),done=u.max&&own(u.id)>=u.max;b.disabled=done||S.money<cost(u);
+  b.innerHTML='<span><b>'+u.n+(own(u.id)&&!u.max?' ×'+own(u.id):'')+'</b><small>'+u.d+'</small></span><span class="cost">'+(done?'Owned':'$'+fmt(cost(u)))+'</span>'})}
+let t;function say(m){$('msg').textContent=m;clearTimeout(t);t=setTimeout(()=>$('msg').textContent='',3000)}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+$('sell').onclick=e=>{S.money+=S.click;beep(440,.05);draw();
+ const f=document.createElement('span');f.className='float';f.textContent='+$'+fmt(S.click);
+ f.style.left=(e.clientX||innerWidth/2)-14+'px';f.style.top=(e.clientY||innerHeight/2)-24+'px';document.body.append(f);setTimeout(()=>f.remove(),800)};
+$('mute').onclick=()=>{sound=!sound;$('mute').textContent='Sound: '+(sound?'on':'off')};
+$('reset').onclick=()=>{if(confirm('Reset all progress?')){S={money:0,click:1,auto:0,level:1,own:{}};save();draw()}};
+setInterval(()=>{if(S.auto){S.money+=S.auto;draw()}save()},1000);
+draw();
+</script>
+</body>
+</html>

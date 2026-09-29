@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tara and Izaiah's Life</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15101f;--card:#221a33;--rose:#ff5d8f;--apricot:#ffb677;--lilac:#b9a6ff;--paper:#fff4ee}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0,#2b1d45,var(--ink) 65%) fixed;color:var(--paper);font-family:'DM Sans',system-ui,sans-serif;text-align:center;padding:1.5rem 1rem 6rem;-webkit-tap-highlight-color:transparent}
+h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(2rem,7vw,3.2rem);margin:0 0 .5rem}
+.count{font-family:'Fraunces',Georgia,serif;font-size:clamp(3rem,14vw,6rem);line-height:1;color:var(--rose);margin:.5rem 0 0}
+.rate{color:var(--apricot);margin:.3rem 0 1.5rem;min-height:1.4em}
+#tap{position:relative;font-size:4.5rem;width:9.5rem;height:9.5rem;border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#ff8fb0,var(--rose));cursor:pointer;box-shadow:0 12px 40px rgba(255,93,143,.45);transition:transform .08s;user-select:none}
+#tap:active{transform:scale(.92)}
+.float{position:fixed;pointer-events:none;font-weight:500;color:var(--apricot);animation:up .9s ease-out forwards}
+@keyframes up{to{transform:translateY(-70px);opacity:0}}
+.ups{display:grid;gap:.7rem;max-width:30rem;margin:2rem auto 0}
+.up{display:flex;justify-content:space-between;align-items:center;gap:1rem;text-align:left;background:var(--card);color:var(--paper);border:1px solid rgba(185,166,255,.25);border-radius:14px;padding:.9rem 1.1rem;font:inherit;cursor:pointer;transition:border-color .2s,transform .15s}
+.up:hover:not(:disabled){border-color:var(--lilac);transform:translateY(-2px)}
+.up:disabled{opacity:.45;cursor:not-allowed}
+.up b{display:block;font-weight:500}.up small{color:#c9bfe0}
+.up .cost{white-space:nowrap;color:var(--apricot)}
+.up .own{color:var(--lilac)}
+#real{margin-top:2rem;background:none;border:1px solid var(--rose);color:var(--paper);padding:.8rem 1.4rem;border-radius:99px;font:inherit;font-size:1.05rem;cursor:pointer}
+#real:hover{background:var(--rose)}
+#msg{min-height:2.4em;margin-top:1rem;color:var(--rose);font-size:1.15rem}
+.home{position:fixed;left:50%;bottom:1.1rem;transform:translateX(-50%);background:var(--rose);color:#fff;padding:.65rem 1.3rem;border-radius:99px;text-decoration:none;font-weight:500;box-shadow:0 8px 24px rgba(255,93,143,.4);white-space:nowrap}
+:focus-visible{outline:3px solid var(--apricot);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<h1>Tara and Izaiah's Life</h1>
+<div class="count" id="love" aria-live="off">0</div>
+<div class="rate" id="rate"></div>
+<button id="tap" aria-label="Grow love">❤️</button>
+<div class="ups" id="ups"></div>
+<button id="real">Let's be real ❤️</button>
+<p id="msg" role="status"></p>
+<a class="home" href="index.html">❤ Return to Home</a>
+<script>
+let love=0,perClick=1,perSec=0,infinite=false;
+const U=[
+ {id:'flowers',n:'Buy flowers for Tara 🌸',d:'+1 love per click',base:50,g:1.5,fx:()=>perClick+=1,m:'You bought flowers for Tara! 🌸'},
+ {id:'poem',n:'Write a poem 📝',d:'+2 love every second',base:200,g:1.6,fx:()=>perSec+=2,m:'You wrote a beautiful poem for Tara! 📝'},
+ {id:'date',n:'Plan a date night 🍝',d:'+10 love every second',base:800,g:1.7,fx:()=>perSec+=10,m:'Date night. She said yes, obviously. 🕯️'},
+ {id:'world',n:'Take over the world 🌍',d:'+50 love every second',base:3000,g:1.9,fx:()=>perSec+=50,m:'Izaiah and Tara took over the world with love! 🌍❤️'}
+];
+const own={};U.forEach(u=>own[u.id]=0);
+const $=id=>document.getElementById(id);
+const cost=u=>Math.ceil(u.base*Math.pow(u.g,own[u.id]));
+const fmt=n=>n===Infinity?'∞':n>=1e6?n.toExponential(2).replace('+',''):Math.floor(n).toLocaleString();
+U.forEach(u=>{const b=document.createElement('button');b.className='up';b.id='u-'+u.id;
+ b.onclick=()=>{const c=cost(u);if(love<c)return;if(!infinite)love-=c;own[u.id]++;u.fx();say(u.m);draw()};$('ups').append(b)});
+function draw(){
+ $('love').textContent=fmt(love);
+ $('rate').textContent=infinite?'Izaiah has infinite love for Tara.':`${fmt(perClick)} per click · ${fmt(perSec)} per second`;
+ U.forEach(u=>{const b=$('u-'+u.id),c=cost(u);b.disabled=love<c;
+  b.innerHTML=`<span><b>${u.n} <span class="own">${own[u.id]?'×'+own[u.id]:''}</span></b><small>${u.d}</small></span><span class="cost">${infinite?'free':fmt(c)+' love'}</span>`})}
+let t;function say(m){$('msg').textContent=m;clearTimeout(t);t=setTimeout(()=>$('msg').textContent='',4000)}
+$('tap').onclick=e=>{love+=perClick;draw();
+ const f=document.createElement('span');f.className='float';f.textContent='+'+fmt(perClick);
+ f.style.left=(e.clientX||innerWidth/2)-12+'px';f.style.top=(e.clientY||innerHeight/2)-20+'px';document.body.append(f);setTimeout(()=>f.remove(),900)};
+$('real').onclick=()=>{infinite=true;love=Infinity;say("Being real: Izaiah's love for Tara has no limit. ❤️");draw()};
+setInterval(()=>{if(perSec&&!infinite){love+=perSec;draw()}},1000);
+draw();
+</script>
+</body>
+</html>

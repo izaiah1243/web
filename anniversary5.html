@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy 5 Months</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#15101f;--rose:#ff5d8f;--apricot:#ffb677;--paper:#fff4ee}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--ink);color:var(--paper);font-family:'DM Sans',system-ui,sans-serif}
+body{background:radial-gradient(ellipse at 50% 0,#2b1d45 0,var(--ink) 65%) fixed}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+main{position:relative;z-index:1;max-width:38rem;margin:0 auto;padding:clamp(2rem,8vh,5rem) 1.25rem 6rem}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(2.6rem,9vw,4.6rem);line-height:1.02;margin:0 0 .4rem;letter-spacing:-.02em;animation:pop 1.2s cubic-bezier(.2,1.4,.4,1) both}
+.sub{font-family:'Fraunces',Georgia,serif;font-style:italic;color:var(--apricot);font-size:1.25rem;margin:0 0 2rem}
+.letter{background:rgba(255,244,238,.07);border:1px solid rgba(255,182,119,.28);border-radius:18px;padding:clamp(1.4rem,5vw,2.4rem);backdrop-filter:blur(8px);box-shadow:0 20px 60px rgba(0,0,0,.4);animation:rise 1.4s .8s ease both}
+.letter p{font-size:1.1rem;line-height:1.75;margin:0 0 1.1em}
+.letter p:first-child{font-family:'Fraunces',Georgia,serif;font-size:1.35rem}
+.sign{color:var(--apricot);font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:1.3rem}
+.again{margin-top:1.5rem;background:none;border:1px solid var(--rose);color:var(--paper);padding:.65rem 1.2rem;border-radius:99px;font:inherit;cursor:pointer;transition:background .2s}
+.again:hover{background:var(--rose)}
+.home{position:fixed;z-index:2;left:50%;bottom:1.1rem;transform:translateX(-50%);background:var(--rose);color:#fff;padding:.65rem 1.3rem;border-radius:99px;text-decoration:none;font-weight:500;box-shadow:0 8px 24px rgba(255,93,143,.4);transition:transform .2s;white-space:nowrap}
+.home:hover{transform:translateX(-50%) scale(1.06)}
+:focus-visible{outline:3px solid var(--apricot);outline-offset:3px}
+@keyframes pop{from{opacity:0;transform:scale(.85)}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<main>
+  <h1>Happy 5 months, my love</h1>
+  <p class="sub">Thank you for the best five months of my life.</p>
+  <section class="letter">
+    <p>My love, every moment with you has been perfect. Thank you so, so much. You've made me feel happiness and true love. You are genuinely the love of my life.</p>
+    <p>I love you so, so much, my beautiful wife. You're perfect in every way, and so beautiful. I don't know how you're with me, but I'm forever grateful for you and everything you do for me.</p>
+    <p>The videos you made for me are the nicest thing anyone has ever done. I was so overwhelmed with love the moment you showed me. I was dying from how much love I felt, so thank you.</p>
+    <p>I am yours forever. I'm never going to lose you, and you'll never lose me. Thank you for everything. Happy 5 months. I love you most.</p>
+    <p class="sign">Forever yours, Izaiah ❤️</p>
+    <button class="again" id="again">Set off the fireworks again</button>
+  </section>
+</main>
+<a class="home" href="index.html">❤ Return to Home</a>
+<script>
+const c=document.getElementById('fx'),x=c.getContext('2d');
+const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+let W,H,P=[],F=[];
+function size(){const d=devicePixelRatio||1;W=c.width=innerWidth*d;H=c.height=innerHeight*d;x.setTransform(d,0,0,d,0,0);W/=d;H/=d}
+addEventListener('resize',size);size();
+const cols=['#ff5d8f','#ffb677','#b9a6ff','#fff4ee','#ff8fb0'];
+function burst(cx,cy){const col=cols[Math.random()*cols.length|0];
+  for(let i=0;i<70;i++){const a=Math.random()*6.283,s=Math.random()*4.5+1;
+    P.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,c:Math.random()<.7?col:cols[Math.random()*5|0]})}}
+function heart(){F.push({x:Math.random()*W,y:H+20,s:Math.random()*14+12,v:Math.random()*.8+.4,w:Math.random()*6})}
+function show(){for(let i=0;i<4;i++)setTimeout(()=>burst(W*(.2+Math.random()*.6),H*(.15+Math.random()*.35)),i*350)}
+function loop(){x.clearRect(0,0,W,H);
+  P=P.filter(p=>p.l>0);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=.05;p.vx*=.985;p.l-=.013;x.globalAlpha=Math.max(p.l,0);x.fillStyle=p.c;x.beginPath();x.arc(p.x,p.y,2.2,0,6.283);x.fill()}
+  x.globalAlpha=.55;x.textAlign='center';
+  F=F.filter(h=>h.y>-30);for(const h of F){h.y-=h.v;h.w+=.03;x.font=h.s+'px serif';x.fillText('❤️',h.x+Math.sin(h.w)*14,h.y)}
+  requestAnimationFrame(loop)}
+if(!still){show();setInterval(heart,700);loop()}
+document.getElementById('again').onclick=()=>{if(still)burst(W/2,H/3);else show();if(still)loop()};
+addEventListener('pointerdown',e=>{if(!still&&!e.target.closest('a,button'))burst(e.clientX,e.clientY)});
+</script>
+</body>
+</html>

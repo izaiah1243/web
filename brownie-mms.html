@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brownie M&amp;Ms Factory 🍫</title>
+<style>
+:root{
+  --pink:#ff69b4;
+  --hot:#ff1493;
+  --blue:#278cff;
+  --blue2:#62b7ff;
+  --brown:#6b351d;
+  --cream:#ffe8c7;
+  --dark:#120b0a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+  background:
+    radial-gradient(circle at 15% 15%,rgba(255,105,180,.18),transparent 28%),
+    radial-gradient(circle at 85% 80%,rgba(39,140,255,.14),transparent 30%),
+    #100b0d;
+  overflow-x:hidden;
+}
+.top{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:28px 0 8px;
+  text-align:center;
+}
+.back{
+  display:inline-block;
+  color:#fff;
+  text-decoration:none;
+  background:rgba(255,20,147,.8);
+  padding:9px 15px;
+  border-radius:10px;
+  font-weight:bold;
+  margin-bottom:16px;
+}
+h1{margin:0;font-size:clamp(2rem,6vw,4rem);text-shadow:0 0 24px rgba(255,20,147,.4)}
+.subtitle{color:#ffc4df;margin:9px 0 18px}
+.hud{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.stat{
+  min-width:145px;
+  padding:11px 18px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  border-radius:14px;
+}
+.stat b{color:#fff}
+#count{color:#ff8fc5}
+#status{color:#83c7ff}
+.factory{
+  width:min(1100px,94vw);
+  margin:10px auto 45px;
+  display:grid;
+  grid-template-columns:1fr 1.2fr 1fr;
+  gap:18px;
+  align-items:stretch;
+}
+.station{
+  min-height:420px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  padding:22px;
+  background:rgba(255,255,255,.055);
+  box-shadow:0 15px 45px rgba(0,0,0,.25);
+  position:relative;
+}
+.station h2{text-align:center;margin:0 0 9px}
+.instruction{text-align:center;color:#d7d7d7;font-size:.92rem;min-height:40px}
+.machine{
+  height:270px;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+.chip{
+  width:90px;height:90px;border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 25%,#8a4b2a 0 7%,transparent 8%),
+    radial-gradient(circle at 65% 35%,#6a321a 0 8%,transparent 9%),
+    radial-gradient(circle at 40% 70%,#6a321a 0 8%,transparent 9%),
+    radial-gradient(circle at 75% 72%,#4d2413 0 7%,transparent 8%),
+    #ffe8c7;
+  border:5px solid #e8c99f;
+  box-shadow:0 10px 20px rgba(0,0,0,.35),inset 7px 7px 12px rgba(255,255,255,.12);
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  transition:transform .15s,box-shadow .15s;
+}
+.chip:hover{transform:scale(1.08)}
+.chip.dragging{cursor:grabbing;transform:scale(1.12);box-shadow:0 18px 35px rgba(0,0,0,.5)}
+.tray{
+  width:250px;height:155px;
+  border-radius:30px 30px 55px 55px;
+  background:linear-gradient(#399fff,#1371df);
+  border:7px solid #8bcfff;
+  box-shadow:inset 0 -18px 30px rgba(0,35,110,.3),0 12px 25px rgba(0,0,0,.35);
+  display:grid;place-items:center;
+  position:relative;
+}
+.tray:after{
+  content:"BLUE BATTER";
+  position:absolute;
+  bottom:10px;
+  font-size:.72rem;
+  letter-spacing:2px;
+  font-weight:900;
+  color:#dff4ff;
+}
+.batter-chip{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,#72c4ff,#278cff);
+  border:4px solid #bde6ff;
+  box-shadow:0 0 30px rgba(98,183,255,.65);
+  display:none;
+  place-items:center;
+  font-size:2rem;
+}
+.timer{
+  position:absolute;
+  top:15px;right:15px;
+  padding:7px 10px;
+  border-radius:9px;
+  background:rgba(0,0,0,.35);
+  font-size:.78rem;
+  display:none;
+}
+.bag{
+  width:210px;height:265px;
+  border-radius:12px 12px 24px 24px;
+  background:linear-gradient(135deg,#c56a31,#713314);
+  border:5px solid #edaa5f;
+  box-shadow:0 14px 25px rgba(0,0,0,.4);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding-top:20px;
+  position:relative;
+  overflow:hidden;
+}
+.bag:before{
+  content:"BROWNIE";
+  font-weight:1000;
+  font-size:1.5rem;
+  letter-spacing:2px;
+  color:#ffe9c8;
+}
+.bag:after{
+  content:"M&Ms";
+  font-size:2.3rem;
+  font-weight:1000;
+  color:#fff;
+  text-shadow:2px 2px #2a1107;
+}
+.bag-items{
+  position:absolute;
+  left:15px;right:15px;bottom:20px;
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:5px;
+}
+.mini{
+  width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;
+  font-size:.55rem;font-weight:900;
+  color:white;
+  border:2px solid rgba(255,255,255,.5);
+  box-shadow:0 3px 6px rgba(0,0,0,.35);
+}
+.seal{
+  margin-top:15px;
+  padding:13px 22px;
+  border:0;border-radius:12px;
+  background:#555;color:#aaa;
+  font-weight:900;font-size:1rem;
+  cursor:not-allowed;
+}
+.seal.ready{background:var(--hot);color:#fff;cursor:pointer;box-shadow:0 0 25px rgba(255,20,147,.45)}
+.sell{
+  display:none;
+  margin:10px auto 0;
+  padding:13px 22px;
+  border:0;border-radius:12px;
+  background:#25b65b;color:#fff;
+  font-weight:900;font-size:1rem;cursor:pointer;
+}
+.sell.show{display:block}
+.message{
+  position:fixed;
+  left:50%;bottom:25px;
+  transform:translateX(-50%) translateY(25px);
+  padding:13px 20px;
+  border-radius:14px;
+  background:rgba(0,0,0,.88);
+  border:1px solid rgba(255,105,180,.5);
+  opacity:0;
+  transition:.25s;
+  pointer-events:none;
+  z-index:20;
+  text-align:center;
+}
+.message.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.overlay{
+  position:fixed;inset:0;
+  display:none;place-items:center;
+  background:rgba(8,5,8,.84);
+  z-index:30;
+}
+.overlay.show{display:grid}
+.win{
+  width:min(500px,88vw);
+  text-align:center;
+  padding:38px 25px;
+  border-radius:25px;
+  background:linear-gradient(145deg,#2a121e,#111018);
+  border:2px solid var(--pink);
+  box-shadow:0 0 70px rgba(255,20,147,.35);
+  animation:pop .45s ease-out;
+}
+.win h2{font-size:2.2rem;margin:0 0 10px}
+.win p{line-height:1.6;color:#ffd4e7}
+.restart{
+  border:0;border-radius:12px;
+  padding:12px 22px;background:var(--hot);
+  color:#fff;font-weight:bold;cursor:pointer;
+}
+@keyframes pop{from{transform:scale(.65) rotate(-3deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@media(max-width:800px){
+  .factory{grid-template-columns:1fr}
+  .station{min-height:330px}
+  .machine{height:210px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="back" href="index.html">← Back to Home</a>
+  <h1>🍫 Brownie M&amp;Ms Factory</h1>
+  <p class="subtitle">Make a bag of 10 delicious Brownie M&amp;Ms for Tara ❤️</p>
+  <div class="hud">
+    <div class="stat">Bag: <b id="count">0 / 10</b></div>
+    <div class="stat">Factory: <b id="status">Ready</b></div>
+  </div>
+</header>
+
+<main class="factory">
+
+  <section class="station">
+    <h2>🍫 Plain Chocolate</h2>
+    <p class="instruction">Pick up a plain chocolate chip and take it to the blue batter.</p>
+    <div class="machine">
+      <div class="chip" id="chip" draggable="false" aria-label="Plain chocolate chip"></div>
+    </div>
+  </section>
+
+  <section class="station" id="batterStation">
+    <h2>🔵 Blue Batter</h2>
+    <p class="instruction">Drop the chocolate into the batter. It takes <b>1 second</b> to coat!</p>
+    <div class="machine">
+      <div class="tray" id="tray">
+        <div class="batter-chip" id="batterChip">🍫</div>
+        <div class="timer" id="timer">Coating: 2.0s</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="station">
+    <h2>🛍️ Brownie M&amp;M Bag</h2>
+    <p class="instruction">Put your coated M&amp;M in the bag. Get 10, then seal it.</p>
+    <div class="machine">
+      <div>
+        <div class="bag" id="bag"><div class="bag-items" id="bagItems"></div></div>
+        <button class="seal" id="seal" disabled>🔒 Seal Bag (0/10)</button>
+        <button class="sell" id="sell">💰 Sell Bag</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="message" id="message"></div>
+
+<div class="overlay" id="overlay">
+  <div class="win">
+    <h2>🎉 SOLD! 🎉</h2>
+    <p>You made and sold a whole bag of <b>10 Brownie M&amp;Ms</b>!</p>
+    <p>🍫💙🍫💙🍫💙🍫💙🍫💙</p>
+    <button class="restart" id="restart">Make Another Bag</button>
+  </div>
+</div>
+
+<script>
+const chip = document.getElementById('chip');
+const tray = document.getElementById('tray');
+const batterChip = document.getElementById('batterChip');
+const timerEl = document.getElementById('timer');
+const bag = document.getElementById('bag');
+const bagItems = document.getElementById('bagItems');
+const countEl = document.getElementById('count');
+const statusEl = document.getElementById('status');
+const sealBtn = document.getElementById('seal');
+const sellBtn = document.getElementById('sell');
+const message = document.getElementById('message');
+const overlay = document.getElementById('overlay');
+const restart = document.getElementById('restart');
+
+let coated = false;
+let coating = false;
+let count = 0;
+let dragging = false;
+
+function say(text){
+  message.textContent = text;
+  message.classList.add('show');
+  clearTimeout(say.t);
+  say.t = setTimeout(()=>message.classList.remove('show'),2200);
+}
+
+function inside(el, x, y){
+  const r = el.getBoundingClientRect();
+  return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+}
+
+chip.addEventListener('pointerdown', e => {
+  if(coating || count >= 10) return;
+  // The same chip is used for both stages: plain -> batter, then coated -> bag.
+  if(!coated && chip.style.display === 'none') return;
+  dragging = true;
+  chip.setPointerCapture(e.pointerId);
+  chip.classList.add('dragging');
+  chip.style.position='fixed';
+  chip.style.zIndex='50';
+  chip.style.left=(e.clientX-45)+'px';
+  chip.style.top=(e.clientY-45)+'px';
+});
+
+chip.addEventListener('pointermove', e => {
+  if(!dragging) return;
+  chip.style.left=(e.clientX-45)+'px';
+  chip.style.top=(e.clientY-45)+'px';
+});
+
+chip.addEventListener('pointerup', e => {
+  if(!dragging) return;
+  dragging=false;
+  chip.classList.remove('dragging');
+
+  if(!coated && inside(tray,e.clientX,e.clientY)){
+    startCoating();
+  }else if(coated && inside(bag,e.clientX,e.clientY)){
+    addMAndM();
+  }else{
+    resetChip();
+    say(coated ? 'Put the coated M&M into the bag! 🛍️' : 'Take the chocolate chip to the blue batter! 🔵');
+  }
+});
+
+function resetChip(){
+  chip.style.position='';
+  chip.style.left='';
+  chip.style.top='';
+  chip.style.zIndex='';
+}
+
+function startCoating(){
+  coating=true;
+  chip.style.display='none';
+  batterChip.style.display='grid';
+  timerEl.style.display='block';
+  statusEl.textContent='Coating...';
+  say('Perfect! Leave it in the blue batter for 1 second...');
+  const start=performance.now();
+  function tick(now){
+    const elapsed=(now-start)/1000;
+    const left=Math.max(0,1-elapsed);
+    timerEl.textContent='Coating: '+left.toFixed(1)+'s';
+    if(elapsed<1){
+      requestAnimationFrame(tick);
+    }else{
+      finishCoating();
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+function finishCoating(){
+  coating=false;
+  coated=true;
+  timerEl.style.display='none';
+  batterChip.style.display='none';
+  statusEl.textContent='Coated! Take it to the bag';
+  chip.style.display='block';
+  chip.style.background='linear-gradient(135deg,#6cbcff,#1680e9)';
+  chip.style.borderColor='#bde6ff';
+  chip.textContent='';
+  say('It is coated! Now drag it into the Brownie M&M bag! 🍫');
+}
+
+function addMAndM(){
+  count++;
+  coated=false;
+  resetChip();
+  chip.style.background='';
+  chip.style.borderColor='';
+  const m=document.createElement('div');
+  m.className='mini';
+  m.textContent='M';
+  m.style.background=['#6b351d','#278cff','#b72b34','#e6a21c','#5b3aa8'][Math.floor(Math.random()*5)];
+  bagItems.appendChild(m);
+  countEl.textContent=count+' / 10';
+  statusEl.textContent=count===10?'Bag full! Seal it!':'Make another M&M';
+  if(count===10){
+    sealBtn.disabled=false;
+    sealBtn.classList.add('ready');
+    sealBtn.textContent='🔒 Seal Bag (10/10)';
+    say('10 M&Ms! Seal the bag! 🎉');
+  }else{
+    say('M&M added! '+count+'/10 🍫');
+  }
+}
+
+sealBtn.addEventListener('click',()=>{
+  if(count<10) return;
+  bag.style.transform='scale(1.03)';
+  bag.style.filter='brightness(1.2)';
+  setTimeout(()=>{
+    bag.style.transform='';
+    bag.style.filter='';
+  },300);
+  sealBtn.disabled=true;
+  sealBtn.classList.remove('ready');
+  sealBtn.textContent='✅ Bag Sealed!';
+  sellBtn.classList.add('show');
+  statusEl.textContent='Ready to sell';
+  say('Sealed perfectly! Now sell it! 💰');
+});
+
+sellBtn.addEventListener('click',()=>{
+  overlay.classList.add('show');
+});
+
+restart.addEventListener('click',()=>{
+  count=0; coated=false; coating=false;
+  bagItems.innerHTML='';
+  countEl.textContent='0 / 10';
+  statusEl.textContent='Ready';
+  sealBtn.disabled=true;
+  sealBtn.classList.remove('ready');
+  sealBtn.textContent='🔒 Seal Bag (0/10)';
+  sellBtn.classList.remove('show');
+  chip.style.display='block';
+  chip.style.background='';
+  chip.style.borderColor='';
+  resetChip();
+  overlay.classList.remove('show');
+  say('Fresh bag! Start making M&Ms! 🍫');
+});
+</script>
+</body>
+</html>
